@@ -1,0 +1,40 @@
+__kernel void reverseASCII(__global char* A, __global char* B) {
+	int i = get_global_id(0);
+	
+	int ascii = (int) A[i];
+	int rev = 0;
+	while (ascii != 0) {
+		rev = rev*10 + ascii%10;
+		ascii /= 10;
+	}
+	
+	B[i] = (char) rev;
+}
+
+__kernel void replicate(__global char* A, __global char* B, int len) {
+	int i = get_global_id(0);
+	int start = i*len;
+	int j;
+	for(j=0;j<len;j++)
+		B[start++] = A[j];
+}
+
+
+__kernel void reverse(__global char* A, int len) {
+	int i = get_global_id(0);
+	int temp = A[i];
+	A[i] = A[len-i-1];
+	A[len-i-1] = temp;
+}
+
+__void revSentence(__global char* A, __global char* B, __global int* sindex, __global int* wlen) {
+	int i = get_global_id(0);
+	int j;
+	for(j=0;j<wlen[i];j++)
+		B[sindex[i]+wlen[i]-j-1] = A[sindex[i]++];
+	 if(i != get_global_size(0)-1) {
+	 	for(k=sindex[i]+wlen[i];k<sindex[i+1];k++)
+	 		B[k] = A[k];
+	 }
+}
+	 
