@@ -4,44 +4,51 @@
 #define MAX_SIZE 30
 
 enum tokenType { ARITH_OP, REL_OP, LOG_OP, SYMBOL, NUM_CONST, STRING, ID};
-struct token {
+struct token 
+{
 	char lexeme[MAX_SIZE];
 	int rowno;
 	int colno;
 	enum tokenType type;
 };
 
-struct token* createToken() {
+struct token* createToken() 
+{
 	struct token* t = (struct token*) malloc(sizeof(struct token));
 	return t;
 }
 
-void assignValuesToToken(struct token* t, char* str, int row, int col, enum tokenType type) {
+void assignValuesToToken(struct token* t, char* str, int row, int col, enum tokenType type) 
+{
 	strcpy(t->lexeme, str);
 	t->rowno = row;
 	t->colno = col;
 	t->type = type;
 }
 
-int isNum(char c) {
+int isNum(char c) 
+{
 	return c >= '0' && c <= '9';
 }
 
-int isChar(char c) {
+int isChar(char c) 
+{	
 	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
 int rowno = 1;
 int colno = 0;
 
-struct token* returnToken(struct token* t, char* buff, int i, char c, enum tokenType type) {
+struct token* returnToken(struct token* t, char* buff, int i, char c, enum tokenType type) 
+{
 	buff[i++] = c;
 	buff[i] = '\0';
 	assignValuesToToken(t, buff, rowno, colno - strlen(buff) + 1, type);
 	return t;
 }
 
-struct token* returnAndRetract(struct token* t, char* buff, int i, char c, enum tokenType type, FILE* fp) {
+struct token* returnAndRetract(struct token* t, char* buff, int i, char c, enum tokenType type, FILE* fp) 
+{
 	buff[i] = '\0';
 	ungetc(c, fp);
 	colno--;
@@ -49,8 +56,9 @@ struct token* returnAndRetract(struct token* t, char* buff, int i, char c, enum 
 	return t;
 }
 
-struct token* getNextToken(FILE *fp) {
-	char c, buff[10];
+struct token* getNextToken(FILE *fp) 
+{
+	char c, buff[1000];
 
 	c = fgetc(fp);
 	colno++;
@@ -151,14 +159,19 @@ struct token* getNextToken(FILE *fp) {
 
 		//String
 		if(c == '"') {
+			// printf("why this o\n");
 			buff[i++] = c;
+			// printf("why this no\n");
 			c = fgetc(fp);
+			// printf("why this go\n");
 			colno++;
-			while(c != '"') {
+			do
+			{
 				buff[i++] = c;
+				// printf("inside loop %c",c);
 				c = fgetc(fp);
 				colno++;
-			}
+			}while(c != '"') ;
 			return returnToken(t, buff, i, c, STRING);
 		}
 
@@ -198,10 +211,10 @@ struct token* getNextToken(FILE *fp) {
 }
 
 int main(int argc, char** argv ) {
-	if(argc < 2) {
-		printf("File name not given.\n");
-		exit(1);
-	}
+	// if(argc < 2) {
+	// 	printf("File name not given.\n");
+	// 	exit(1);
+	// }
 	FILE *fp = fopen("input.c", "r");
 	struct token* t;
 	while(t = getNextToken(fp)) {

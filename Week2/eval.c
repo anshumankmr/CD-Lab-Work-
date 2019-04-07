@@ -231,7 +231,7 @@ int main(int argc, char** argv ) {
 		printf("File name not given.\n");
 		exit(1);
 	}
-	FILE *fp = fopen("evalIn.php", "r");
+	FILE *fp = fopen("input.c", "r");
 	struct token* t;
 	while(t = getNextToken(fp)) {
 		printf("<%s, %d, %d, %d>\n", t->lexeme, t->rowno, t->colno, t->type);

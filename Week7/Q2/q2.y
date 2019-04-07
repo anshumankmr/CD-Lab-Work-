@@ -5,33 +5,91 @@
 	int yyerror();
 	extern FILE *yyin;
 %}
-%token SS NL MOP SOP DOP AOP NUM ID
 
-%% 
-stmt: SIMP_EXP NL ;
-SIMP_EXP : TERM SEPR| ;
-SEPR : OPE SEPR | ;
-OPE :  MOP | SOP | AOP | DOP ;
-TERM: ID | NUM;
+%token NUM ID NL I EL OB CB OCB CCB EE NE LTE GTE GT LT SC EQ
+%left '+' '-' '*' '\\' '%'
+
+%%
+s:dc NL {
+	printf("Valid\n");
+}
+	;
+
+stmt: assign SC
+	| dc
+	;
+
+assign: ID EQ expn
+
+dc:I OB expn CB newl OCB newl stmt_list newl CCB newl dprime
+	;
+
+newl: NL
+	|
+	;
+
+dprime: EL newl OCB newl stmt_list newl CCB
+	|
+	;
+
+stmt_list: stmt stmt_list
+	|
+	;
+
+expn: simexpn eprime
+	;
+
+simexpn: term seprime
+	;
+
+term: factor tprime
+	;
+
+factor: ID
+	| NUM
+	;
+
+tprime: mulop factor tprime
+	|
+	;
+
+mulop: '*'
+	| '/'
+	| '%'
+	;
+
+seprime: addop term seprime
+	|
+	;
+
+addop: '+'
+	| '-'
+	;
+
+eprime: relop simexpn
+	|
+	;
+
+relop: EE
+	| NE
+	| LTE
+	| GTE
+	| GT
+	| LT
+	;
+
 %%
 
-int yyerror(char *msg)
-{
-	printf("invalid expression\n");
-	return 1; 
+int yyerror(char *msg) {
+	printf("Invalid\n");
+	exit(0);
 }
 
-void main()
-{
-	printf("Enter the expression\n");
-	yyin=fopen("q2in.txt", "r");
-	do 
-	{
-	 if(yyparse())
-	 {
-	  printf("\n Failure");
-	  exit(0);
-	 }
-	} while (!feof(yyin));
-	printf("Success");
+void main() {
+	yyin = fopen("q2.txt", "r");
+	while(!feof(yyin)) {
+		if(yyparse())
+			exit(0);
+	}
 }
+
