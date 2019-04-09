@@ -8,8 +8,7 @@
 
 int main(int argc, char** argv) {
 	yylex();
-	char* ans = simple == 1 ? "simple" : "compound";
-	printf("The sentence is %s", ans);
+	printf("The sentence is %d",simple);
 }
 
 int yywrap() {
