@@ -9,7 +9,7 @@ int i;
 void init()
 {
  printf("Enter the string\n");
- gets(input);
+ fgets(input, 8000, stdin);
  char * p = strtok(input," ");
  i = 0;
  do
