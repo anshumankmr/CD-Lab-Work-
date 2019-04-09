@@ -11,9 +11,12 @@ void S() {
 		T();
 	}
 
-	if(strcmp(lookAhead, "EOL\0") == 0) {
+	if(strcmp(lookAhead, "$\0") == 0)
+	{
 		printf("Successfully parsed.");
-	} else {
+	} 
+	else
+	{
 		printf("String doesnt belong to grammar");
 	}
 }

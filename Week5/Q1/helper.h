@@ -29,5 +29,6 @@ void init()
 }
 char* getNextToken() 
 {
+    printf("%d\n",curr+1 );
 	return tokens[++curr];
 }
